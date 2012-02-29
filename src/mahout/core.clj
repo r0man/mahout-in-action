@@ -19,7 +19,7 @@
     (NearestNUserNeighborhood. n min-similarity user-similarity data-model (or sampling-rate 1))))
 
 (defn pearson-correlation-similarity
-  "Returns the pearson correlation similarity of `data-model`."
+  "Returns the pearson correlation similarity for `data-model`."
   [data-model]
   (if-let [data-model (file-data-model data-model)]
     (PearsonCorrelationSimilarity. data-model)))
