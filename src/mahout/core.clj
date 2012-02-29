@@ -23,7 +23,8 @@
     (NearestNUserNeighborhood. n user-similarity model)))
 
 (defn pearson-correlation-similarity
-  "Returns the pearson correlation similarity for `model`."
+  "Returns the Pearson correlation similarity for `model`.
+  See: http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient"
   [model]
   (if-let [model (file-model model)]
     (PearsonCorrelationSimilarity. model)))
@@ -31,8 +32,10 @@
 (defn recommend
   "Returns a seq of recommendations from `recommender`."
   [recommender user-id how-many]
-  (map #(hash-map :item (.getItemID %1) :value (.getValue %1))
-       (.recommend recommender user-id how-many)))
+  (if (pos? how-many)
+    (map #(hash-map :item (.getItemID %1) :value (.getValue %1))
+         (.recommend recommender user-id how-many))
+    []))
 
 (extend-protocol IFileDataModel
   nil

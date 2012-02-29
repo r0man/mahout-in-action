@@ -2,4 +2,5 @@
   :description "Clojure Examples from Mahout in Action"
   :dependencies [[org.apache.mahout/mahout-core "0.6"]
                  [org.apache.mahout/mahout-math "0.6"]
-                 [org.clojure/clojure "1.3.0"]])
+                 [org.clojure/clojure "1.3.0"]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]])

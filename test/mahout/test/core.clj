@@ -32,5 +32,7 @@
 (deftest test-recommend
   (let [model (file-model intro-dataset-path)
         similarity (pearson-correlation-similarity model)
-        neighborhood (nearest-n-user-neighborhood 2 similarity model)]
-    (is (= [104] (map :item (recommend (generic-user-based-recommender model neighborhood similarity) 1 1))))))
+        neighborhood (nearest-n-user-neighborhood 2 similarity model)
+        recommender (generic-user-based-recommender model neighborhood similarity)]
+    (is (= [] (recommend recommender 1 0)))
+    (is (= [104] (map :item (recommend recommender 1 1))))))
