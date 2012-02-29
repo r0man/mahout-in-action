@@ -1,16 +1,18 @@
 (ns mahout.core
   (:import [org.apache.mahout.cf.taste.impl.model.file FileDataModel]
+           [org.apache.mahout.cf.taste.impl.model GenericDataModel]
            [org.apache.mahout.cf.taste.impl.neighborhood NearestNUserNeighborhood]
            [org.apache.mahout.cf.taste.impl.recommender GenericUserBasedRecommender]
            [org.apache.mahout.cf.taste.impl.similarity PearsonCorrelationSimilarity]
+           [org.apache.mahout.common RandomUtils]
            java.io.File))
 
-(defprotocol IFileDataModel
-  (-file-model [obj] "Convert `obj` into a FileDataModel."))
+(defprotocol IDataModel
+  (-data-model [obj] "Convert `obj` into a FileDataModel."))
 
-(defn file-model
+(defn data-model
   "Returns a FileDataModel from `path`, or nil if it doesn't exists."
-  [path] (-file-model path))
+  [path] (-data-model path))
 
 (defn generic-user-based-recommender [model neighborhood similarity]
   (GenericUserBasedRecommender. model neighborhood similarity))
@@ -19,14 +21,14 @@
   "Returns a neighborhood computation consisting of the nearest N
   users to a given user."
   [n user-similarity model]
-  (if-let [model (file-model model)]
+  (if-let [model (data-model model)]
     (NearestNUserNeighborhood. n user-similarity model)))
 
 (defn pearson-correlation-similarity
   "Returns the Pearson correlation similarity for `model`.
   See: http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient"
   [model]
-  (if-let [model (file-model model)]
+  (if-let [model (data-model model)]
     (PearsonCorrelationSimilarity. model)))
 
 (defn recommend
@@ -37,17 +39,24 @@
          (.recommend recommender user-id how-many))
     []))
 
-(extend-protocol IFileDataModel
+(defn use-test-seed
+  "Use the same seed for testing purposes."
+  [] (RandomUtils/useTestSeed))
+
+(extend-protocol IDataModel
   nil
-  (-file-model [_]
+  (-data-model [_]
     nil)
   File
-  (-file-model [file]
+  (-data-model [file]
     (if (.exists file)
       (FileDataModel. file)))
   FileDataModel
-  (-file-model [model]
+  (-data-model [model]
+    model)
+  GenericDataModel
+  (-data-model [model]
     model)
   String
-  (-file-model [string]
-    (-file-model (File. string))))
+  (-data-model [string]
+    (-data-model (File. string))))

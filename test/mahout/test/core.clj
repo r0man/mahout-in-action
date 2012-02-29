@@ -8,10 +8,10 @@
 
 (def intro-dataset-path "test-resources/intro.csv")
 
-(deftest test-file-model
-  (is (nil? (file-model nil)))
-  (is (nil? (file-model "NOT-EXISTING")))
-  (is (instance? FileDataModel (file-model intro-dataset-path))))
+(deftest test-data-model
+  (is (nil? (data-model nil)))
+  (is (nil? (data-model "NOT-EXISTING")))
+  (is (instance? FileDataModel (data-model intro-dataset-path))))
 
 (deftest test-nearest-n-user-neighborhood
   (let [user-similarity (pearson-correlation-similarity intro-dataset-path)]
@@ -24,13 +24,13 @@
   (is (instance? PearsonCorrelationSimilarity (pearson-correlation-similarity intro-dataset-path))))
 
 (deftest test-generic-user-based-recommender
-  (let [model (file-model intro-dataset-path)
+  (let [model (data-model intro-dataset-path)
         similarity (pearson-correlation-similarity model)
         neighborhood (nearest-n-user-neighborhood 2 similarity model)]
     (is (instance? GenericUserBasedRecommender (generic-user-based-recommender model neighborhood similarity)))))
 
 (deftest test-recommend
-  (let [model (file-model intro-dataset-path)
+  (let [model (data-model intro-dataset-path)
         similarity (pearson-correlation-similarity model)
         neighborhood (nearest-n-user-neighborhood 2 similarity model)
         recommender (generic-user-based-recommender model neighborhood similarity)]
