@@ -9,3 +9,9 @@
 (deftest test-evaluate-intro
   (use-test-seed)
   (is (= 1.0 (evaluate-intro 2 0.7 1.0))))
+
+(deftest test-precision-recall-intro
+  (use-test-seed)
+  (let [stats (precision-recall-intro 2)]
+    (is (= 0.75 (.getPrecision stats)))
+    (is (= 1.0 (.getRecall stats)))))

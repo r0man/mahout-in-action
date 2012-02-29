@@ -20,3 +20,10 @@
                   (buildRecommender [_this model]
                     (make-recommender model n)))]
     (.evaluate evaluator builder nil (data-model intro-dataset-path) train-percent eval-percent)))
+
+(defn precision-recall-intro [n]
+  (let [evaluator (GenericRecommenderIRStatsEvaluator.)
+        builder (reify RecommenderBuilder
+                  (buildRecommender [_this model]
+                    (make-recommender model n)))]
+    (.evaluate evaluator builder nil (data-model intro-dataset-path) nil n GenericRecommenderIRStatsEvaluator/CHOOSE_THRESHOLD 1.0)))
